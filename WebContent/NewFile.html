@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Hello World</title>
+    <link rel="stylesheet" type="text/css" href="/css/dx.common.css" />
+    <link rel="stylesheet" type="text/css" href="/css/dx.ios.default.css" />
+    <link rel="stylesheet" type="text/css" href="/css/dx.android.holo-dark.css" />
+    <link rel="stylesheet" type="text/css" href="/css/dx.tizen.black.css" />
+    <link rel="stylesheet" type="text/css" href="/css/dx.generic.light.css" />
+    <link rel="stylesheet" type="text/css" href="/css/dx.win8.black.css" />
+    <script type="text/javascript" src="/js/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="/js/knockout-3.0.0.js"></script>
+    <script type="text/javascript" src="/js/globalize.min.js"></script>
+    <script type="text/javascript" src="/js/dx.phonejs.js"></script>
+    <!-- Layouts -->
+    <script type="text/javascript" src="/layouts/Simple/SimpleLayout.js"></script>
+    <link rel="stylesheet" type="text/css" href="/layouts/Simple/SimpleLayout.css" />
+    <link rel="dx-template" type="text/html" href="/layouts/Simple/SimpleLayout.html"/>    
+    <script type="text/javascript">
+        window.AppNamespace = {};
+        $(function () {       
+            AppNamespace.app = new DevExpress.framework.html.HtmlApplication({
+                namespace: AppNamespace,
+                navigationType: "simple"
+            });
+            AppNamespace.app.router.register(":view/:name", { view: "home", name: '' });
+            AppNamespace.app.navigate();
+        });
+        AppNamespace.home = function () {
+            var viewModel = {
+                message: ko.observable('Welcome!'),
+                name: ko.observable(''),
+                sayHello: function () {
+                    this.message("Hello " + this.name() + '!');
+                },
+                greet: function () {
+                    AppNamespace.app.navigate("greeting/" + this.name());
+                }
+            };
+            return viewModel;
+        };
+        AppNamespace.greeting = function (params) {
+            var viewModel = {
+                message: ko.observable('Hello ' + params.name + '!'),
+            };
+            return viewModel;
+        };
+    </script>
+</head>
+<body>
+    <div data-options="dxView : { name: 'home', title: 'Home' } " >
+        <div data-options="dxContent : { targetPlaceholder: 'content' } " >
+            <h1 data-bind="text: message"></h1>
+            Enter your name: <div data-bind="dxTextBox: { value: name }" style="width: 200px"></div>
+            <div data-bind="dxButton: { text: 'Say Hello', clickAction: sayHello }"></div>
+            <div data-bind="dxButton: { text: 'Greet', clickAction: greet }"></div>
+        </div>
+    </div>
+    <div data-options="dxView : { name: 'greeting', title: 'Greeting' } " >
+        <div data-options="dxContent : { targetPlaceholder: 'content' } " >
+            <h1 data-bind="text: message"></h1>
+        </div>
+    </div>
+</body>
+</html>
