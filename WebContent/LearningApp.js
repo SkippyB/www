@@ -22,7 +22,7 @@ function gameLoad() {
 			innerHead.innerHTML = i + 1;
 
 			var img = document.createElement("img");
-			img.src = "images/car.png"; 
+			img.src = "WebContent/images/car.png"; 
 			img.setAttribute("height", "100");
 			img.setAttribute("width", "100");
 
@@ -64,7 +64,7 @@ window.onload = function() {
 	c2.setAttribute('height', height);
 	c.strokeStyle = '#ff0000';
 	images[0] = new Image();
-	images[0].src = "images/car.png";
+	images[0].src = "WebContent/images/car.png";
 
 	images[0].onload = function() {
 		c.drawImage(images[0], width / 8, height / 8, images[0].width / 4,
@@ -81,7 +81,7 @@ window.onload = function() {
 	};
 
 	images[1] = new Image();
-	images[1].src = "images/car.png";
+	images[1].src = "WebContent/images/car.png";
 
 	images[1].onload = function() {
 		c.drawImage(images[1], 2 * width / 8, 2 * height / 8,
