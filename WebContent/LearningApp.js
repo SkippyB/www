@@ -4,6 +4,7 @@
 var MAX_GAMES = 10;
 var DIFFICULTIES = 5;
 var person;
+
 var cols;// game 1?
 var game;
 var dif = new Array(MAX_GAMES);// difficulty for the games
@@ -18,7 +19,7 @@ function getRandomInt(min, max) {
 function gameLoad() {
 
 	if (game == 0) {
-		
+
 		$("#matching").show();
 		var cols2 = document.getElementById('columns');
 		cols2.innerHTML = '';
@@ -97,46 +98,43 @@ window.onload = function() {
 		for (var j = 0; j < DIFFICULTIES; j++) {
 
 			x[i][j] = new Array();
-			
+
 		}
 
 	}
 
 	scores = x;
-	
-	
-	
-	
-	
+
 	var all = localStorage.getItem("people");
-	if (all == null) {
-		all = 'Bobadoo';
+	if (all != null) {
+
+		$("#selectName").prop("disabled", false);
+
+		var all_sp = all.split('--');
+		for (var i = 0; i < all_sp.length; i++) {
+			if (all_sp[i] != '') {
+				$("#selectName").append(
+						"<option value=\"" + all_sp[i] + "\">" + all_sp[i]
+								+ "</option>");
+
+			}
+		}
+
+	} else {
+
+		$("#selectName").prop("disabled", true);
+
 	}
-	var all_sp = all.split('--');
-	
-	
-	
-	for (var i = 0; i < all_sp.length; i++) {
-		
-		$("#selectName").append("<option value=\"" + i + "\">" + all_sp[i] + "</option>");		
-		
-		
-	}
-	
-	
-	
-	
-	
-	
+
 	// Account Select
 	$("#main").hide();
-	$('#startButton').click(click);
-
+	$('#startButton').click(clickStart);
+	$("#newPerson").click(createPerson);
 	$("#matching").hide();
 
 };
 
-function click() {
+function clickStart() {
 
 	person = $('#selectName option:selected').attr('value');
 
@@ -145,7 +143,7 @@ function click() {
 	$("#start").hide();
 	$("#main").show();
 
-	game = parseInt(person);
+	game = 0;
 	round = 1;
 	correct = 0;
 	gameLoad();
@@ -153,11 +151,22 @@ function click() {
 }
 
 function createPerson() {
-	
+	person = $("#name").val();
+
 	var all = localStorage.getItem("people");
-	localStorage.setItem(all + "--" + person);
-	
-	
+	if (all == null) {
+		all = '';
+	}
+
+	var all_sp = all.split('--');
+	if (person == '' | -1 != $.inArray(person, all_sp)) {
+
+		alert("already exists");
+		return;
+	}
+
+	localStorage.setItem("people", all + "--" + person);
+	alert(localStorage.getItem("people"));
 	var dif2 = '';
 	for (var i = 0; i < MAX_GAMES; i++) {
 
@@ -177,8 +186,17 @@ function createPerson() {
 	}
 
 	localStorage.setItem(person + "scores", scores2);
-	
+
 	loadPerson();
+
+	$("#start").hide();
+	$("#main").show();
+
+	game = 0;
+	round = 1;
+	correct = 0;
+	gameLoad();
+
 }
 
 function storePerson() {
@@ -207,15 +225,15 @@ function storePerson() {
 function loadPerson() {
 
 	var dif2 = localStorage.getItem(person + "difficulty");// 1 number per
-															// game, "3312" game
-															// 1 dif 3, game 2
-															// dif 3
+	// game, "3312" game
+	// 1 dif 3, game 2
+	// dif 3
 	if (dif2 != null) {
 
 		for (var i = 0; i < MAX_GAMES; i++) {
 
 			dif[i] = parseInt(dif2.charAt(i));
-			
+
 		}
 
 	} else {
@@ -227,13 +245,12 @@ function loadPerson() {
 	}
 
 	var temp_scores = localStorage.getItem(person + "scores");// 20
-																// Scores+dates
-																// for game X,
-																// dificulty Y.
-	
+	// Scores+dates
+	// for game X,
+	// dificulty Y.
+
 	temp_scores.split('x');
-	
-	
+
 	var x = new Array(MAX_GAMES);
 	for (var i = 0; i < MAX_GAMES; i++) {
 		x[i] = new Array(DIFFICULTIES);
@@ -241,26 +258,13 @@ function loadPerson() {
 		for (var j = 0; j < DIFFICULTIES; j++) {
 
 			x[i][j] = new Array();
-			
-			
-			
-			
-			
-			
-			
-			
+
 		}
 
 	}
-	
-	
-	
+
 	scores = x;
-	
-	
-	
-	
-	
+
 	// {{score-datex20}xY}xX
 
 }
@@ -342,10 +346,8 @@ function handleDrop(e) {
 function saveScore() {
 
 	var d = new Date();
-	
+
 	var date = d.getDay() + "-" + d.getMonth() + "-" + d.getYear();
-	
-	
 
 	var cor;
 	if (correct == 10) {
@@ -355,7 +357,7 @@ function saveScore() {
 	}
 
 	var score = cor + date;
-	
+
 	scores[game][dif[game]].push(score);
 	if (scores[game][dif[game]].length > 20) {
 		scores[game][dif[game]].shift();
@@ -366,7 +368,7 @@ function saveScore() {
 
 	}
 	correct = 0;
-	
+
 }
 
 var dragSrcEl = null;
@@ -379,8 +381,7 @@ function handleDragStart(e) {
 
 	e.dataTransfer.effectAllowed = 'move';
 	e.dataTransfer.setData('text/html', this.innerHTML);
-	
-	
+
 }
 
 function handleDragOver(e) {
@@ -406,7 +407,7 @@ function handleDragLeave(e) {
 var playing = false;
 
 function loop(e) {
-	
+
 	if (playing) {
 		e.fadeTo(700, .3, function() {
 			$(this).fadeTo(700, 1, loop(e));

@@ -14,6 +14,11 @@ CHcARSET "ISO-8859-1";
   -khtml-user-drag: element;
   -webkit-user-drag: element;
 }
+
+#selectName {
+	 width: 150px;
+}
+
 #matching {
 	
 
