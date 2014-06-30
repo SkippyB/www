@@ -379,6 +379,8 @@ function handleDragStart(e) {
 
 	e.dataTransfer.effectAllowed = 'move';
 	e.dataTransfer.setData('text/html', this.innerHTML);
+	
+	
 }
 
 function handleDragOver(e) {
