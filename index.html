@@ -1,18 +1,43 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<script src="WebContent/learningApp.js"></script> 		
-		<script src="WebContent/globalize.js"></script>
-		<script src="WebContent/dx.phonejs.js"></script>
-		<script src="WebContent/jqury-2.0.3.js"></script>
-		<link rel="stylesheet" type="text/css" href="WebContent/LearningApp.css">
-		<meta charset="ISO-8859-1">
-		<title>LearningApp</title>
-	</head>
-	<body >
-		<canvas id="mainCanvas"></canvas> 
-			<div id="columns"> 
-			</div>
+<head>
+<script src="WebContent/learningApp.js" type="text/javascript"></script>
+
+<script src="WebContent/jquery-2.0.3.js" type="text/javascript"></script>
+
+<link rel="stylesheet" type="text/css" href="WebContent/LearningApp.css">
+<meta charset="ISO-8859-1">
+<title>LearningApp</title>
+</head>
+<body>
+
+
+	<div id="start">
+		<h1>Hello</h1>
+		<select id = 'selectName'>
 		
-	</body>
+		</select>
+		<button id = 'startButton'>Start</button>
+		 <input type="text" name="lastname">
+		<button id = 'newPerson'>New Person Register</button>
+	</div>
+
+
+
+
+	<div id="main">
+		<button id = "gameSel">Game Select</button>
+		<button id ="stats">Stats</button>
+	
+	</div>
+
+
+
+
+	<div id="matching">
+		<div id="head"></div>
+		
+		<div id="columns"></div>
+	</div>
+</body>
 </html>
