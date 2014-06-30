@@ -375,6 +375,7 @@ function handleDragStart(e) {
 	// Target (this) element is the source node.
 
 	dragSrcEl = this;
+	$(this).css('opacity', 1);
 
 	e.dataTransfer.effectAllowed = 'move';
 	e.dataTransfer.setData('text/html', this.innerHTML);
@@ -403,6 +404,7 @@ function handleDragLeave(e) {
 var playing = false;
 
 function loop(e) {
+	
 	if (playing) {
 		e.fadeTo(700, .3, function() {
 			$(this).fadeTo(700, 1, loop(e));
