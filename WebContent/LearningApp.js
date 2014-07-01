@@ -1,7 +1,7 @@
 /**
  * 
  */
-var ROUNDS = 3;
+var ROUNDS = 4;
 var MAX_GAMES = 10;
 var DIFFICULTIES = 5;
 var person;
@@ -467,7 +467,7 @@ function saveScore() {
 		scores[game][dif[game]].shift();
 	}
 
-	if (correct > 3 && dif[game] < DIFFICULTIES - 1) {
+	if (correct > ROUNDS - 1 && dif[game] < DIFFICULTIES - 1) {
 		dif[game]++;
 
 	}
