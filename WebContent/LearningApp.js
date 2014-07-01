@@ -4,7 +4,8 @@
 var MAX_GAMES = 10;
 var DIFFICULTIES = 5;
 var person;
-
+var calibrated = false;
+var favorite = "dog";
 var cols;// game 1?
 var game;
 var dif = new Array(MAX_GAMES);// difficulty for the games
@@ -19,7 +20,7 @@ function getRandomInt(min, max) {
 function gameLoad() {
 
 	if (game == 0) {
-		$("#matching").show();
+		$("#0").show();
 		var cols2 = document.getElementById('columns');
 		cols2.innerHTML = '';
 		var ran = getRandomInt(1, dif[0]);
@@ -31,7 +32,7 @@ function gameLoad() {
 			var innerHead = document.createElement('header');
 
 			while (filenum == temp) {
-				temp = getRandomInt(1, 448);
+				temp = getRandomInt(1, 448);   //mathicng count
 
 			}
 			filenum = temp;
@@ -126,11 +127,13 @@ window.onload = function() {
 	}
 
 	// Account Select
+	$("#calibrate").hide();
+	$("#0").hide();
 	$("#replay").hide();
 	$("#main").hide();
 	$('#startButton').click(clickStart);
 	$("#newPerson").click(createPerson);
-	$("#matching").hide();
+	$("#0").hide();
 	$("#games").hide();
 	$("#gameSel").click(function() {
 		$("#main").hide();
@@ -156,15 +159,46 @@ window.onload = function() {
 		$("#main").hide();
 		$("#start").show();
 		
+	});$("#backGame").click(function() {
+		$('#' + game).hide();
+		$("#games").show();
+		
 	});
 	
 };
 
 function newGame(g) {
-	round = 1;
-	correct = 0;
-	game = g;
-	gameLoad();
+	
+	if (!calibrated) {
+
+		$("#calibrate").show();
+		
+		var options = $("#calibrate").children();
+	
+		for (var i = 1; i <= options.length; i++) {
+			
+			$(options[i]).click(function(){
+				
+				favorite = $(options[i]).html();
+				
+				calibrated = true;
+				$('#calibrate').hide();
+				newGame(g);
+				
+			});
+			
+			
+			
+		}
+		
+	} else {
+	
+		round = 1;
+		correct = 0;
+		game = g;
+		gameLoad();
+	
+	}
 }
 
 function clickStart() {
@@ -250,11 +284,11 @@ function storePerson() {
 	}
 
 	localStorage.setItem(person + "scores", scores2);
-
+	localStorage.setItem(person + "fav", favorite);
 }
 
 function loadPerson() {
-
+	favorite = localStorage.getItem(person + "fav");
 	var dif2 = localStorage.getItem(person + "difficulty");// 1 number per
 	// game, "3312" game
 	// 1 dif 3, game 2
@@ -313,7 +347,7 @@ function handleDrop(e) {
 		// Don't do anything if dropping the same column we're dragging.
 		if (dragSrcEl != this & $(this).attr('draggable') != 'true') {
 
-			if (dragSrcEl.firstChild.innerHTML == this.firstChild.innerHTML) {// drag
+			if (dragSrcEl.firstChild.innerHTML == this.firstChild.innerHTML) {// drag //change this at some point if needed
 
 				if (!playing) {
 					correct++;
@@ -322,7 +356,7 @@ function handleDrop(e) {
 					round++;
 					this.innerHTML = e.dataTransfer.getData('text/html');
 
-				//	$('#matching').hide();
+				//	$('#0').hide();
 
 					playing = false;
 					// you win animation
@@ -330,7 +364,7 @@ function handleDrop(e) {
 
 				} else { // matching
 
-					$('#matching').hide();
+					$('#0').hide();
 					$("#replay").show();
 					dragSrcEl.innerHTML = this.innerHTML;
 					round = 0;
