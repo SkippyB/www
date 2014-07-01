@@ -19,7 +19,6 @@ function getRandomInt(min, max) {
 function gameLoad() {
 
 	if (game == 0) {
-
 		$("#matching").show();
 		var cols2 = document.getElementById('columns');
 		cols2.innerHTML = '';
@@ -127,26 +126,60 @@ window.onload = function() {
 	}
 
 	// Account Select
+	$("#replay").hide();
 	$("#main").hide();
 	$('#startButton').click(clickStart);
 	$("#newPerson").click(createPerson);
 	$("#matching").hide();
-
+	$("#games").hide();
+	$("#gameSel").click(function() {
+		$("#main").hide();
+		$("#games").show();
+		
+	});
+	$("#matchingButton").click(function() {
+		$("#games").hide();
+		newGame(0);
+		
+	});	
+	$("#playAgain").click(function() {
+		$("#replay").hide();
+		newGame(game);
+		
+	});	
+	$("#back").click(function() {
+		$("#replay").hide();
+		$("#main").show();
+		
+	});
+	$("#out").click(function() {
+		$("#main").hide();
+		$("#start").show();
+		
+	});
+	
 };
+
+function newGame(g) {
+	round = 1;
+	correct = 0;
+	game = g;
+	gameLoad();
+}
 
 function clickStart() {
 
 	person = $('#selectName option:selected').attr('value');
 
+	if (!person) {
+		return;
+	}
 	loadPerson();
 
 	$("#start").hide();
 	$("#main").show();
 
-	game = 0;
-	round = 1;
-	correct = 0;
-	gameLoad();
+	
 
 }
 
@@ -166,12 +199,13 @@ function createPerson() {
 	}
 
 	localStorage.setItem("people", all + "--" + person);
-	alert(localStorage.getItem("people"));
+
 	var dif2 = '';
+	
 	for (var i = 0; i < MAX_GAMES; i++) {
 
 		dif2 = dif2 + 0;
-
+	
 	}
 	localStorage.setItem(person + "difficulty", dif2);
 
@@ -192,10 +226,7 @@ function createPerson() {
 	$("#start").hide();
 	$("#main").show();
 
-	game = 0;
-	round = 1;
-	correct = 0;
-	gameLoad();
+
 
 }
 
@@ -228,21 +259,14 @@ function loadPerson() {
 	// game, "3312" game
 	// 1 dif 3, game 2
 	// dif 3
-	if (dif2 != null) {
-
+	
+		
 		for (var i = 0; i < MAX_GAMES; i++) {
 
 			dif[i] = parseInt(dif2.charAt(i));
-
+			
 		}
 
-	} else {
-		for (var i = 0; i < MAX_GAMES; i++) {
-
-			dif[i] = 0;
-
-		}
-	}
 
 	var temp_scores = localStorage.getItem(person + "scores");// 20
 	// Scores+dates
@@ -298,7 +322,7 @@ function handleDrop(e) {
 					round++;
 					this.innerHTML = e.dataTransfer.getData('text/html');
 
-					$('#matching').hide();
+				//	$('#matching').hide();
 
 					playing = false;
 					// you win animation
@@ -307,7 +331,7 @@ function handleDrop(e) {
 				} else { // matching
 
 					$('#matching').hide();
-					$("#main").show();
+					$("#replay").show();
 					dragSrcEl.innerHTML = this.innerHTML;
 					round = 0;
 					saveScore(); // Person, game, correct, dificulty
