@@ -72,6 +72,7 @@ function gameLoad() {
 			
 			$(col).bind('touchstart dragstart', handleDragStart);
 			$(col).bind('touchenter dragover', handleDragOver);
+			$(col).bind('touchmove', handleMove);
 			$(col).bind('touchend drop', handleDrop);
 
 
@@ -85,6 +86,12 @@ function gameLoad() {
 		alert(2 + 'test');
 	}
 
+}
+
+
+function handleMove(e) {
+	$(this).parent().css({position: 'relative'});
+	$(this).css({top: e.pos.top, left: e.pos.left, position:'absolute'});
 }
 
 window.onunload = function() {
