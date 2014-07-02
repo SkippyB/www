@@ -22,6 +22,7 @@ function getRandomInt(min, max) {
 function gameLoad() {
 
 	if (game == 0) {
+		var div2;
 		$("#0").show();
 		var cols2 = document.getElementById('columns');
 		cols2.innerHTML = '';
@@ -41,7 +42,7 @@ function gameLoad() {
 
 			var img = document.createElement("img");
 			img.src = "img/" + filenum + "_test.gif";
-			img.setAttribute('draggable', 'false');
+			//img.setAttribute('draggable', 'false');
 
 			innerHead.innerHTML = filenum;
 
@@ -52,28 +53,27 @@ function gameLoad() {
 			innerDiv.appendChild(img);
 
 			innerDiv.setAttribute('class', 'column');
-			innerDiv.setAttribute('draggable', 'true');
-			
+			//innerDiv.setAttribute('draggable', 'true');
+			$(innerDiv).draggable();
 			cols2.appendChild(innerDiv);
 			if (i == ran) {
 				answer = "img/" + filenum + "_test.gif";
-				var div2 = innerDiv.cloneNode(true);
-				div2.setAttribute('draggable', false);
+				div2 = innerDiv.cloneNode(true);
+			//	div2.setAttribute('draggable', false);
 				document.getElementById('head').innerHTML = '';
 				document.getElementById('head').appendChild(div2);
+			
 			}
 
 		}
-
+		
 		cols = document.getElementsByClassName('column');
 
 		[].forEach.call(cols, function(col) {
 
 			
-			$(col).bind('touchstart dragstart', handleDragStart);
-			$(col).bind('touchenter dragover', handleDragOver);
-			$(col).bind('touchmove', handleMove);
-			$(col).bind('touchend drop', handleDrop);
+		
+			$(col).bind('dragstop', function (e) {handleDrop(e, col, div2);});
 
 
 		});
@@ -115,8 +115,6 @@ window.onload = function() {
 	scores = x;
 
 
-	
-	
 	populatePeople();
 
 	// Account Select
@@ -363,20 +361,40 @@ function loadPerson() {
 	// {{score-datex20}xY}xX
 
 }
+function collision($div1, $div2) {
+    var x1 = $div1.offset().left;
+    var y1 = $div1.offset().top;
+    var h1 = $div1.outerHeight(false);
+    var w1 = $div1.outerWidth(false);
+    var b1 = y1 + h1;
+    var r1 = x1 + w1;
+    var x2 = $div2.offset().left;
+    var y2 = $div2.offset().top;
+    var h2 = $div2.height(false);
+    var w2 = $div2.width(false);
+    var b2 = y2 + h2;
+    var r2 = x2 + w2;
+
+    if (b1 < y2 || y1 > b2 || r1 < x2 || x1 > r2) return false;
+    return true;
+}
 
 
+function handleDrop(e2, div1, div2) {
+	
 
-function handleDrop(e2) {
 	var e = e2.originalEvent;
 	e.stopPropagation(); // Stops some browsers from redirecting.
 	e.preventDefault();
+	
+	
 	switch (game) {
 	case 0:
-
+		if (!collision($(div1), $(div2))) return;
 		// Don't do anything if dropping the same column we're dragging.
-		if (dragSrcEl != this & $(this).attr('draggable') != 'true') {
+		if (div1 != div2 & $(div1).attr('draggable') != 'true') {
 
-			if (dragSrcEl.firstChild.innerHTML == this.firstChild.innerHTML) {// drag
+			if (div1.firstChild.innerHTML == div2.firstChild.innerHTML) {// drag
 																				// //change
 																				// this
 																				// at
@@ -390,7 +408,7 @@ function handleDrop(e2) {
 				}
 				if (round != ROUNDS) {
 					round++;
-					this.innerHTML = e.dataTransfer.getData('text/html');
+					//this.innerHTML = e.dataTransfer.getData('text/html');
 
 					// $('#0').hide();
 
@@ -402,7 +420,7 @@ function handleDrop(e2) {
 
 					$('#0').hide();
 					$("#replay").show();
-					dragSrcEl.innerHTML = this.innerHTML;
+					//dragSrcEl.innerHTML = this.innerHTML;
 					round = 0;
 					saveScore(); // Person, game, correct, dificulty
 
@@ -410,15 +428,15 @@ function handleDrop(e2) {
 				}
 			} else {
 				alert('wrong');
-				dragSrcEl.setAttribute("class", 'wrong');
-				dragSrcEl.innerHTML = '';
+				div1.setAttribute("class", 'wrong');
+				div1.innerHTML = '';
 		
 				cols = document.getElementsByClassName('column');
 
 				[].forEach.call(cols, function(col) {
 
 					if ($(col).children('img').attr('src') == answer
-							& $(col).attr('draggable') == 'true') {
+							& col != div2) {
 						playing = true;
 						loop($(col));
 
@@ -434,7 +452,7 @@ function handleDrop(e2) {
 		break;
 
 	}
-	return false;
+	
 }
 
 function saveScore() {
@@ -465,31 +483,9 @@ function saveScore() {
 	correct = 0;
 }
 
-var dragSrcEl = null;
 
-function handleDragStart(e2) {
-	
-	// Target (this) element is the source node.
-	var e = e2.originalEvent;
 
-	dragSrcEl = this;
-	$(this).css('opacity', 1);
 
-	e.dataTransfer.effectAllowed = 'move';
-	e.dataTransfer.setData('text/html', this.innerHTML);
-
-}
-
-function handleDragOver(e2) {
-	var e = e2.originalEvent;
-	e.stopPropagation(); // Stops some browsers from redirecting.
-	e.preventDefault();
-
-	e.dataTransfer.dropEffect = 'move'; // See the section on the DataTransfer
-	// object.
-
-	return false;
-}
 
 
 
@@ -499,7 +495,7 @@ function loop(e) {
 
 	if (playing) {
 		e.fadeTo(700, .3, function() {
-			$(this).fadeTo(700, 1, loop(e));
+			e.fadeTo(700, 1, loop(e));
 		});
 	}
 }
