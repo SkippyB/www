@@ -53,7 +53,7 @@ function gameLoad() {
 
 			innerDiv.setAttribute('class', 'column');
 			innerDiv.setAttribute('draggable', 'true');
-
+			
 			cols2.appendChild(innerDiv);
 			if (i == ran) {
 				answer = "img/" + filenum + "_test.gif";
@@ -68,15 +68,12 @@ function gameLoad() {
 		cols = document.getElementsByClassName('column');
 
 		[].forEach.call(cols, function(col) {
+
 			
-			$(col).draggableTouch();
-			
-			$(col).bind('dragstart', handleDragStart);
-			$(col).bind('dragenter', handleDragEnter);
-			$(col).bind('dragover', handleDragOver);
-			$(col).bind('dragleave', handleDragLeave);
-			$(col).bind('drop', handleDrop);
-			$(col).bind('dragend', handleDragEnd);
+			$(col).bind('touchstart dragstart', handleDragStart);
+			$(col).bind('touchenter dragover', handleDragOver);
+			$(col).bind('touchend drop', handleDrop);
+
 
 		});
 		$('img').on('dragstart', function(event) {
@@ -110,11 +107,7 @@ window.onload = function() {
 
 	scores = x;
 
-	
-	$(document).bind('touchmove', function(e) {
-		e.preventDefault();
-	});
-	
+
 	
 	
 	populatePeople();
@@ -364,10 +357,7 @@ function loadPerson() {
 
 }
 
-function handleDragEnd(e) {
-	// this/e.target is the source node.
-	
-}
+
 
 function handleDrop(e2) {
 	var e = e2.originalEvent;
@@ -494,15 +484,7 @@ function handleDragOver(e2) {
 	return false;
 }
 
-function handleDragEnter(e) {
-	// this / e.target is the current hover target.
-	// this.classList.add('over');
-}
 
-function handleDragLeave(e) {
-	// this.classList.remove('over'); // this / e.target is previous target
-	// element.
-}
 
 var playing = false;
 
