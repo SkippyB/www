@@ -108,6 +108,12 @@ window.onload = function() {
 	scores = x;
 
 	
+	$(document).bind('touchmove', function(e) {
+		e.preventDefault();
+	});
+	
+	
+	
 	populatePeople();
 
 	// Account Select
@@ -245,29 +251,7 @@ function createPerson() {
 	}
 
 	localStorage.setItem("people", all + "--" + person);
-//
-//	var dif2 = '';
-//
-//	for (var i = 0; i < MAX_GAMES; i++) {
-//
-//		dif2 = dif2 + 0;
-//
-//	}
-//	localStorage.setItem(person + "difficulty", dif2);
-//
-//	var scores2 = '';
-//
-//	for (var j = 0; j < MAX_GAMES; j++) {// for each game
-//
-//		for (var k = 0; k < DIFFICULTIES; k++) {// for each difficulty
-//			
-//			for (var h = 0; h < 20; h++) {
-//			scores2 = scores2 +'B-0-0-0' + "_";
-//			}
-//			scores2 = scores2 + "<";
-//		}
-//
-//	}
+
 	
 	for (var i = 0; i < MAX_GAMES; i++) {
 
