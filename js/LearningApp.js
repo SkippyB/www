@@ -67,18 +67,15 @@ function gameLoad() {
 		cols = document.getElementsByClassName('column');
 
 		[].forEach.call(cols, function(col) {
-
-			$(col).bind('dragstop', function(e) {
+	
+			
+			$(col).on('dragstop', function(e) {
 				handleDrop(e, col, div2);
-				$(col).on('dragstart', function(event) {
-					event.preventDefault();
-				});
+				
 			});
 
 		});
-		$('img').on('dragstart', function(event) {
-			event.preventDefault();
-		});
+	
 	}
 
 	if (game == 2) {
@@ -87,16 +84,7 @@ function gameLoad() {
 
 }
 
-function handleMove(e) {
-	$(this).parent().css({
-		position : 'relative'
-	});
-	$(this).css({
-		top : e.pos.top,
-		left : e.pos.left,
-		position : 'absolute'
-	});
-}
+
 
 window.onunload = function() {
 
