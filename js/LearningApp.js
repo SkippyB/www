@@ -42,7 +42,6 @@ function gameLoad() {
 
 			var img = document.createElement("img");
 			img.src = "img/" + filenum + "_test.gif";
-			//img.setAttribute('draggable', 'false');
 
 			innerHead.innerHTML = filenum;
 
@@ -53,28 +52,28 @@ function gameLoad() {
 			innerDiv.appendChild(img);
 
 			innerDiv.setAttribute('class', 'column');
-			//innerDiv.setAttribute('draggable', 'true');
 			$(innerDiv).draggable();
 			cols2.appendChild(innerDiv);
 			if (i == ran) {
 				answer = "img/" + filenum + "_test.gif";
 				div2 = innerDiv.cloneNode(true);
-			//	div2.setAttribute('draggable', false);
 				document.getElementById('head').innerHTML = '';
 				document.getElementById('head').appendChild(div2);
-			
+
 			}
 
 		}
-		
+
 		cols = document.getElementsByClassName('column');
 
 		[].forEach.call(cols, function(col) {
 
-			
-		
-			$(col).bind('dragstop', function (e) {handleDrop(e, col, div2);});
-
+			$(col).bind('dragstop', function(e) {
+				handleDrop(e, col, div2);
+				$(col).on('dragstart', function(event) {
+					event.preventDefault();
+				});
+			});
 
 		});
 		$('img').on('dragstart', function(event) {
@@ -88,12 +87,15 @@ function gameLoad() {
 
 }
 
-
-
-
 function handleMove(e) {
-	$(this).parent().css({position: 'relative'});
-	$(this).css({top: e.pos.top, left: e.pos.left, position:'absolute'});
+	$(this).parent().css({
+		position : 'relative'
+	});
+	$(this).css({
+		top : e.pos.top,
+		left : e.pos.left,
+		position : 'absolute'
+	});
 }
 
 window.onunload = function() {
@@ -113,9 +115,8 @@ window.onload = function() {
 		}
 
 	}
-
+	$("h1").draggableTouch();
 	scores = x;
-	
 
 	populatePeople();
 
@@ -166,7 +167,6 @@ window.onload = function() {
 	});
 
 };
-
 
 function populatePeople() {
 	$("#selectName").empty();
@@ -255,37 +255,32 @@ function createPerson() {
 
 	localStorage.setItem("people", all + "--" + person);
 
-	
 	for (var i = 0; i < MAX_GAMES; i++) {
 
 		dif[i] = 0;
 
 	}
-	
-	
-	
-	
+
 	var x = new Array(MAX_GAMES);
 	for (var i = 0; i < MAX_GAMES; i++) {
 		x[i] = new Array(DIFFICULTIES);
 
 		for (var j = 0; j < DIFFICULTIES; j++) {
-			
+
 			x[i][j] = new Array(20);
 
 			for (var h = 0; h < 20; h++) {
-				
+
 				x[i][j][h] = 'B-0-0-0';
 			}
 
 		}
 
 	}
-	
-	scores = x;
-	
 
-//	localStorage.setItem(person + "scores", scores2);
+	scores = x;
+
+	// localStorage.setItem(person + "scores", scores2);
 
 	storePerson();
 	$("#start").hide();
@@ -309,7 +304,7 @@ function storePerson() {
 		for (var k = 0; k < DIFFICULTIES; k++) {// for each difficulty
 
 			for (var h = 0; h < 20; h++) {// scores
-				
+
 				scores2 = scores2 + scores[j][k][h] + "_";//
 			}
 			scores2 = scores2 + "<";
@@ -350,7 +345,7 @@ function loadPerson() {
 			x[i][j] = new Array(20);
 
 			for (var h = 0; h < 20; h++) {
-				
+
 				x[i][j][h] = twen_scores[h];
 			}
 
@@ -364,65 +359,68 @@ function loadPerson() {
 
 }
 function collision($div1, $div2) {
-    var x1 = $div1.offset().left;
-    var y1 = $div1.offset().top;
-    var h1 = $div1.outerHeight(false);
-    var w1 = $div1.outerWidth(false);
-    var b1 = y1 + h1;
-    var r1 = x1 + w1;
-    var x2 = $div2.offset().left;
-    var y2 = $div2.offset().top;
-    var h2 = $div2.height(false);
-    var w2 = $div2.width(false);
-    var b2 = y2 + h2;
-    var r2 = x2 + w2;
+	var x1 = $div1.offset().left;
+	var y1 = $div1.offset().top;
+	var h1 = $div1.outerHeight(false);
+	var w1 = $div1.outerWidth(false);
+	var b1 = y1 + h1;
+	var r1 = x1 + w1;
+	var x2 = $div2.offset().left;
+	var y2 = $div2.offset().top;
+	var h2 = $div2.outerHeight(false);
+	var w2 = $div2.outerWidth(false);
+	var b2 = y2 + h2;
+	var r2 = x2 + w2;
 
-    if (b1 < y2 || y1 > b2 || r1 < x2 || x1 > r2) return false;
-    return true;
+	if (b1 < y2 || y1 > b2 || r1 < x2 || x1 > r2)
+		return false;
+	return true;
 }
 
-
 function handleDrop(e2, div1, div2) {
-	
 
 	var e = e2.originalEvent;
 	e.stopPropagation(); // Stops some browsers from redirecting.
 	e.preventDefault();
-	
-	
+
 	switch (game) {
 	case 0:
-		if (!collision($(div1), $(div2))) return;
+		if (!collision($(div1), $(div2)))
+			return;
 		// Don't do anything if dropping the same column we're dragging.
-		if (div1 != div2 & $(div1).attr('draggable') != 'true') {
+		if (div1 != div2) {
 
 			if (div1.firstChild.innerHTML == div2.firstChild.innerHTML) {// drag
-																				// //change
-																				// this
-																				// at
-																				// some
-																				// point
-																				// if
-																				// needed
+				// //change
+				// this
+				// at
+				// some
+				// point
+				// if
+				// needed
 
 				if (!playing) {
 					correct++;
 				}
 				if (round != ROUNDS) {
 					round++;
-					//this.innerHTML = e.dataTransfer.getData('text/html');
+					// this.innerHTML = e.dataTransfer.getData('text/html');
 
 					// $('#0').hide();
 
 					playing = false;
+					$(div1).hide();
+					$(div2).fadeOut(500);
+					$(div2).fadeIn(1500);
 					// you win animation
-					gameLoad();
+					
+					window.setTimeout(gameLoad, 2000);
 
 				} else { // matching
 
 					$('#0').hide();
 					$("#replay").show();
-					//dragSrcEl.innerHTML = this.innerHTML;
+					// dragSrcEl.innerHTML = this.innerHTML;
 					round = 0;
 					saveScore(); // Person, game, correct, dificulty
 
@@ -432,7 +430,7 @@ function handleDrop(e2, div1, div2) {
 				alert('wrong');
 				div1.setAttribute("class", 'wrong');
 				div1.innerHTML = '';
-		
+
 				cols = document.getElementsByClassName('column');
 
 				[].forEach.call(cols, function(col) {
@@ -454,7 +452,7 @@ function handleDrop(e2, div1, div2) {
 		break;
 
 	}
-	
+
 }
 
 function saveScore() {
@@ -484,12 +482,6 @@ function saveScore() {
 	}
 	correct = 0;
 }
-
-
-
-
-
-
 
 var playing = false;
 
