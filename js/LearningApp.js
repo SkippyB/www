@@ -89,6 +89,8 @@ function gameLoad() {
 }
 
 
+
+
 function handleMove(e) {
 	$(this).parent().css({position: 'relative'});
 	$(this).css({top: e.pos.top, left: e.pos.left, position:'absolute'});
@@ -113,7 +115,7 @@ window.onload = function() {
 	}
 
 	scores = x;
-
+	
 
 	populatePeople();
 
