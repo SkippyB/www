@@ -71,12 +71,12 @@ function gameLoad() {
 			
 			$(col).draggableTouch();
 			
-			$(col).on('dragstart', handleDragStart);
-			$(col).on('dragenter', handleDragEnter);
-			$(col).on('dragover', handleDragOver);
-			$(col).on('dragleave', handleDragLeave);
-			$(col).on('drop', handleDrop);
-			$(col).on('dragend', handleDragEnd);
+			$(col).bind('dragstart', handleDragStart);
+			$(col).bind('dragenter', handleDragEnter);
+			$(col).bind('dragover', handleDragOver);
+			$(col).bind('dragleave', handleDragLeave);
+			$(col).bind('drop', handleDrop);
+			$(col).bind('dragend', handleDragEnd);
 
 		});
 		$('img').on('dragstart', function(event) {
