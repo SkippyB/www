@@ -108,16 +108,6 @@ window.onload = function() {
 	scores = x;
 
 	
-	
-	
-	$('html, body').css({
-	    'overflow': 'hidden',
-	    'height': '100%'
-	});
-	
-	
-	
-	
 	populatePeople();
 
 	// Account Select
@@ -489,7 +479,6 @@ function saveScore() {
 
 	}
 	correct = 0;
-	alert(scores[game][dif[game]][18]);
 }
 
 var dragSrcEl = null;
