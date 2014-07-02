@@ -397,7 +397,7 @@ function handleDrop(e2, div1, div2) {
 					// $('#0').hide();
 
 					playing = false;
-					$(div1).hide();
+					$(div1).remove();
 					$(div2).fadeOut(500);
 					$(div2).fadeIn(1500);
 					// you win animation
@@ -417,8 +417,6 @@ function handleDrop(e2, div1, div2) {
 			} else {
 				alert('wrong');
 				div1.setAttribute("class", 'wrong');
-				div1.innerHTML = '';
-
 				cols = document.getElementsByClassName('column');
 
 				[].forEach.call(cols, function(col) {
