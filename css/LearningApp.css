@@ -18,10 +18,7 @@ CHcARSET "ISO-8859-1";
 #selectName {
 	 width: 150px;
 }
-html, body {
-    overflow: hidden;
-    height: 100%;
-}
+
 #matching {
 	
 
