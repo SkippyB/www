@@ -68,6 +68,9 @@ function gameLoad() {
 		cols = document.getElementsByClassName('column');
 
 		[].forEach.call(cols, function(col) {
+			
+			$(col).draggableTouch();
+			
 			$(col).on('dragstart', handleDragStart);
 			$(col).on('dragenter', handleDragEnter);
 			$(col).on('dragover', handleDragOver);
