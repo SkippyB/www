@@ -79,7 +79,10 @@ function gameLoad() {
 			});
 
 		});
-	
+		$("img").on("dragstart", function(e) {
+			
+			e.preventDefault();
+		});
 	}
 
 	if (game == 2) {
@@ -360,36 +363,29 @@ function handleDrop(e2, div1, div2) {
 				if (!playing) {
 					correct++;
 				}
-				if (round != ROUNDS) {
-					round++;
-					// this.innerHTML = e.dataTransfer.getData('text/html');
-
-					// $('#0').hide();
-
+				
+					
+				
 					playing = false;
+					$("#columns .column").draggable("disable");
 					$(div1).remove();
 					$(div2).fadeOut(500);
 					$(div2).fadeIn(1500);
 					// you win animation
+					if (round != ROUNDS) {
 					
-					window.setTimeout(gameLoad, 2000);
+						window.setTimeout(gameLoad, 2000);
+						round++;
+					} else {
+						round = 0;
 
-				} else { // matching
-					playing = false;
-					$(div1).remove();
-					$(div2).fadeOut(500);
-					$(div2).fadeIn(1500);
+						window.setTimeout(saveScore, 2000);
+					}
 
 			
-					round = 0;
-
-					window.setTimeout(saveScore, 2000);
 				
-					// dragSrcEl.innerHTML = this.innerHTML;
 					
-					
-					
-				}
+				
 			} else {
 				alert('wrong');
 				div1.setAttribute("class", 'wrong');
@@ -445,6 +441,7 @@ function saveScore() {
 
 	}
 	correct = 0;
+	storePerson();
 }
 
 var playing = false;
