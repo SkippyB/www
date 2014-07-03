@@ -143,12 +143,28 @@ window.onload = function() {
 		newGame(game);
 
 	});
-	$("#back").click(function() {
-		$("#replay").hide();
-		$("#main").show();
+	
+
+	
+	$("#statsButton").click(function() {
+		$("#main").hide();
+		stats();
+		$("#stats").show();
+		
 
 	});
-	$("#backMenu").click(function() {
+	//back buttons
+	$("#out").click(function() {
+		$("#main").hide();
+		populatePeople();
+		$("#start").show();
+
+	});	
+	$("#backGame").click(function() {
+		$('#' + game).hide();
+		$("#games").show();
+
+	});	$("#backMenu").click(function() {
 		$("#games").hide();
 		$("#main").show();
 
@@ -157,25 +173,20 @@ window.onload = function() {
 		$("#main").show();
 
 	});
-	$("#out").click(function() {
-		$("#main").hide();
-		populatePeople();
-		$("#start").show();
+	$("#back").click(function() {
+		$("#replay").hide();
+		$("#main").show();
 
-	});	
-	$("#statsButton").click(function() {
-		$("#main").hide();
-		stats();
-		$("#stats").show();
+	});
+	$("#clear").click(function() {
+		var r = confirm("REALLY CLEAR?");
+		if (r == true) {
+			localStorage.clear();
+			populatePeople();
+			
+		}
 		
-
 	});
-	$("#backGame").click(function() {
-		$('#' + game).hide();
-		$("#games").show();
-
-	});
-
 };
 
 function populatePeople() {
@@ -337,6 +348,25 @@ function collision($div1, $div2) {
 		return false;
 	return true;
 }
+
+
+function goBack() {
+	if ($("#start").css('display') != 'none') {//on main page {
+		
+		navigator.app.exitApp();
+
+	
+	}
+	
+}
+window.addEventListener('deviceready', function() {
+alert();
+	window.addEventListener("backbutton", goBack, false);
+
+	}, false);
+
+
+
 
 function handleDrop(e2, div1, div2) {
 
