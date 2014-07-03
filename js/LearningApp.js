@@ -4,16 +4,18 @@
 var ROUNDS = 4;
 var MAX_GAMES = 10;
 var DIFFICULTIES = 5;
+var GAME_NAMES = ["Matching",'1','2','3','4','5','6','7','8','9'];
 var person;
 var calibrated = false;
 var favorite = "dog";
 var cols;// game 0?
 var game;
 var dif = new Array(MAX_GAMES);// difficulty for the games
-var scores;
+var scores;//[game][dificulty][20 rounds]
 var round;
 var answer;
 var correct;
+
 
 function getRandomInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -22,6 +24,7 @@ function getRandomInt(min, max) {
 function gameLoad() {
 
 	if (game == 0) {
+		
 		var div2;
 		$("#0").show();
 		var cols2 = document.getElementById('columns');
@@ -38,6 +41,7 @@ function gameLoad() {
 				temp = getRandomInt(1, 448); // mathicng count
 
 			}
+		
 			filenum = temp;
 
 			var img = document.createElement("img");
@@ -87,8 +91,9 @@ function gameLoad() {
 
 
 window.onunload = function() {
-
-	storePerson();
+	if(dif[0] != null){
+		storePerson();
+	}
 };
 
 window.onload = function() {
@@ -106,9 +111,12 @@ window.onload = function() {
 	$("h1").draggableTouch();
 	scores = x;
 
+	person = localStorage.getItem("last_user");
+	
 	populatePeople();
 
 	// Account Select
+	$("#stats").hide();
 	$("#calibrate").hide();
 	$("#0").hide();
 	$("#replay").hide();
@@ -141,11 +149,22 @@ window.onload = function() {
 		$("#games").hide();
 		$("#main").show();
 
+	});	$("#backMenu2").click(function() {
+		$("#stats").hide();
+		$("#main").show();
+
 	});
 	$("#out").click(function() {
 		$("#main").hide();
-		$("#start").show();
 		populatePeople();
+		$("#start").show();
+
+	});	
+	$("#statsButton").click(function() {
+		$("#main").hide();
+		stats();
+		$("#stats").show();
+		
 
 	});
 	$("#backGame").click(function() {
@@ -169,9 +188,11 @@ function populatePeople() {
 				$("#selectName").append(
 						"<option value=\"" + all_sp[i] + "\">" + all_sp[i]
 								+ "</option>");
-
+			
 			}
 		}
+	
+		$("#selectName option[value="+person + "]").attr('selected', 'selected');
 
 	} else {
 
@@ -219,6 +240,7 @@ function clickStart() {
 	if (!person) {
 		return;
 	}
+	$("#name").val("");
 	loadPerson();
 
 	$("#start").hide();
@@ -228,7 +250,7 @@ function clickStart() {
 
 function createPerson() {
 	person = $("#name").val();
-
+	$("#name").val("");
 	var all = localStorage.getItem("people");
 	if (all == null) {
 		all = '';
@@ -277,73 +299,21 @@ function createPerson() {
 }
 
 function storePerson() {
-	var dif2 = '';
-	for (var i = 0; i < MAX_GAMES; i++) {
+	
+	localStorage.setItem(person + "difficulty", JSON.stringify(dif));
 
-		dif2 = dif2 + dif[i];
 
-	}
-	localStorage.setItem(person + "difficulty", dif2);
-
-	var scores2 = '';
-
-	for (var j = 0; j < MAX_GAMES; j++) {// for each game
-
-		for (var k = 0; k < DIFFICULTIES; k++) {// for each difficulty
-
-			for (var h = 0; h < 20; h++) {// scores
-
-				scores2 = scores2 + scores[j][k][h] + "_";//
-			}
-			scores2 = scores2 + "<";
-		}
-
-	}
-
-	localStorage.setItem(person + "scores", scores2);
+	localStorage.setItem(person + "scores", JSON.stringify(scores));
 	localStorage.setItem(person + "fav", favorite);
 }
 
 function loadPerson() {
 	calibrated = false;
+	localStorage.setItem("last_user", person);
 	favorite = localStorage.getItem(person + "fav");
-	var dif2 = localStorage.getItem(person + "difficulty");// 1 number per
-	// game, "3312" game
-	// 1 dif 3, game 2
-	// dif 3
+	dif = JSON.parse(localStorage.getItem(person + "difficulty"));// 1 number per	
+	scores = JSON.parse(localStorage.getItem(person + "scores"));// 20
 
-	for (var i = 0; i < MAX_GAMES; i++) {
-
-		dif[i] = parseInt(dif2.charAt(i));
-
-	}
-
-	var temp_scores = localStorage.getItem(person + "scores");// 20
-	// Scores+dates
-	// for game X,
-	// dificulty Y.
-
-	temp_scores.split('<');
-	var x = new Array(MAX_GAMES);
-	for (var i = 0; i < MAX_GAMES; i++) {
-		x[i] = new Array(DIFFICULTIES);
-
-		for (var j = 0; j < DIFFICULTIES; j++) {
-			var twen_scores = temp_scores[i * MAX_GAMES + j].split('_');
-			x[i][j] = new Array(20);
-
-			for (var h = 0; h < 20; h++) {
-
-				x[i][j][h] = twen_scores[h];
-			}
-
-		}
-
-	}
-
-	scores = x;
-
-	// {{score-datex20}xY}xX
 
 }
 function collision($div1, $div2) {
@@ -405,14 +375,20 @@ function handleDrop(e2, div1, div2) {
 					window.setTimeout(gameLoad, 2000);
 
 				} else { // matching
-
-					$('#0').hide();
-					$("#replay").show();
-					// dragSrcEl.innerHTML = this.innerHTML;
-					round = 0;
-					saveScore(); // Person, game, correct, dificulty
-
 					playing = false;
+					$(div1).remove();
+					$(div2).fadeOut(500);
+					$(div2).fadeIn(1500);
+
+			
+					round = 0;
+
+					window.setTimeout(saveScore, 2000);
+				
+					// dragSrcEl.innerHTML = this.innerHTML;
+					
+					
+					
 				}
 			} else {
 				alert('wrong');
@@ -442,7 +418,9 @@ function handleDrop(e2, div1, div2) {
 }
 
 function saveScore() {
-
+	
+	$('#' + game).hide();
+	$("#replay").show();
 	var d = new Date();
 
 	var date = "-" + (d.getMonth() + 1) + "-" + d.getUTCDate() + "-"
@@ -470,6 +448,71 @@ function saveScore() {
 }
 
 var playing = false;
+
+
+function stats() {
+	var table = $('#stats table');
+	table.empty();
+	for (var i = 0; i < MAX_GAMES + 1; i++) {
+		table.append("<tr> </tr>");
+		
+	}
+	var tr0 = $("tr").get(0);
+	$(tr0).append("<td>Dificulty</td>");
+	for (var x = 1; x <= DIFFICULTIES; x++){
+		$(tr0).append("<td>Level" + x + "</td>");
+	}
+	
+	
+	for (var j = 0; j < MAX_GAMES; j++) {
+		var tr = $("tr").get(j + 1);
+		$(tr).append("<td>"+GAME_NAMES[j]+"</td>");
+		for (var y = 0; y < DIFFICULTIES; y++){
+		$(tr).append("<td class = \'score\'>"+scores[j][y][19].replace("A", "10").replace("B-0-0-0", "NONE") +"</td>");
+
+		
+		}
+		
+		
+	}
+	
+	
+	
+	var all_rows = $(".score");
+	
+	var funcs = [];
+	function setupScoreStat(i, x) {
+		
+		return function () {
+			var all = "";
+			for (var j = 19; j >= 0; j--) {
+				all = all + (scores[i][x][j].replace("A", "10") + "\n").replace("B-0-0-0\n", "");
+			}
+			if (all == "") {
+				all = "No games played";
+			}
+			alert("Last 20 games\n" + all);
+		};
+		
+	}
+	
+	for (var i = 0; i < MAX_GAMES; i++) {
+
+		for (var x = 0; x < DIFFICULTIES; x++){
+			//alert(scores[9][4][19]);
+			funcs[i*DIFFICULTIES + x] = setupScoreStat(i , x);
+			
+			
+			$(all_rows[i*DIFFICULTIES + x]).click(setupScoreStat(i,x));
+			
+		}
+	}
+		
+
+}
+
+
+
 
 function loop(e) {
 
