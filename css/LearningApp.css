@@ -60,6 +60,10 @@ CHcARSET "ISO-8859-1";
   cursor: move;
 }
 
+body {
+	display: none;
+}
+
 .wrong {
 	
 	display: none;

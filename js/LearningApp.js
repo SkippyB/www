@@ -9,7 +9,7 @@ var person;
 var calibrated = false;
 var favorite = "dog";
 var cols;// game 0?
-var game;
+var game = 0;
 var dif = new Array(MAX_GAMES);// difficulty for the games
 var scores;//[game][dificulty][20 rounds]
 var round;
@@ -154,30 +154,10 @@ window.onload = function() {
 
 	});
 	//back buttons
-	$("#out").click(function() {
-		$("#main").hide();
-		populatePeople();
-		$("#start").show();
+	
+	$(".goback").click(goBack);
 
-	});	
-	$("#backGame").click(function() {
-		$('#' + game).hide();
-		$("#games").show();
-
-	});	$("#backMenu").click(function() {
-		$("#games").hide();
-		$("#main").show();
-
-	});	$("#backMenu2").click(function() {
-		$("#stats").hide();
-		$("#main").show();
-
-	});
-	$("#back").click(function() {
-		$("#replay").hide();
-		$("#main").show();
-
-	});
+	
 	$("#clear").click(function() {
 		var r = confirm("REALLY CLEAR?");
 		if (r == true) {
@@ -188,6 +168,8 @@ window.onload = function() {
 		}
 	
 	});
+	
+	$("body").show();
 };
 
 function populatePeople() {
@@ -265,11 +247,12 @@ function clickStart() {
 
 function createPerson() {
 
-	$("#name").val("");
 	person = $("#name").val();
+
+	$("#name").val("");
 	if (person == '' | !person.match(/^[a-zA-Z\-]+$/)) {
 		alert("invalid name");
-		
+		alert();
 		return;
 	}
 	
@@ -361,11 +344,40 @@ function collision($div1, $div2) {
 
 function goBack() {
 	if ($("#start").css('display') != 'none') {//on main page {
-		
+		alert();
 		navigator.app.exitApp();
 
 	
+	} 
+else if($("#games").css('display') != 'none') {
+	
+	$("#games").hide();
+	$("#main").show();
+
 	}
+else if($("#stats").css('display') != 'none') {
+	$("#stats").hide();
+	$("#main").show();
+}
+else if($("#replay").css('display') != 'none') {
+	$("#replay").hide();
+	$("#main").show();
+}else if($("#main").css('display') != 'none') {
+
+		$("#main").hide();
+		populatePeople();
+		$("#start").show();
+}
+	
+
+	
+	
+	
+else if($('#' + game).css('display') != 'none') {
+
+	$('#' + game).hide();
+	$("#games").show();
+}
 	
 }
 window.addEventListener('deviceready', function() {
