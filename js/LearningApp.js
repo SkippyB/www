@@ -183,9 +183,10 @@ window.onload = function() {
 		if (r == true) {
 			localStorage.clear();
 			populatePeople();
-			
+			var snd = new Audio("audio/dontstopmenow.wav"); // buffers automatically when created
+			snd.play();
 		}
-		
+	
 	});
 };
 
@@ -196,7 +197,7 @@ function populatePeople() {
 
 		$("#selectName").prop("disabled", false);
 
-		var all_sp = all.split('--');
+		var all_sp = all.split('\\');
 		for (var i = 0; i < all_sp.length; i++) {
 			if (all_sp[i] != '') {
 				$("#selectName").append(
@@ -263,21 +264,29 @@ function clickStart() {
 }
 
 function createPerson() {
-	person = $("#name").val();
+
 	$("#name").val("");
+	person = $("#name").val();
+	if (person == '' | !person.match(/^[a-zA-Z\-]+$/)) {
+		alert("invalid name");
+		
+		return;
+	}
+	
 	var all = localStorage.getItem("people");
 	if (all == null) {
 		all = '';
 	}
 
-	var all_sp = all.split('--');
-	if (person == '' | -1 != $.inArray(person, all_sp)) {
+	var all_sp = all.split('\\');
+	if ( -1 != $.inArray(person, all_sp)) {
 
 		alert("already exists");
+		
 		return;
 	}
 
-	localStorage.setItem("people", all + "--" + person);
+	localStorage.setItem("people", all + "\\" + person);
 
 	for (var i = 0; i < MAX_GAMES; i++) {
 
@@ -472,6 +481,10 @@ function saveScore() {
 	}
 	correct = 0;
 	storePerson();
+	
+	
+	
+	
 }
 
 var playing = false;
