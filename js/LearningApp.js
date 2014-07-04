@@ -163,8 +163,14 @@ window.onload = function() {
 		if (r == true) {
 			localStorage.clear();
 			populatePeople();
-			var snd = new Audio("audio/dontstopmenow.wav"); // buffers automatically when created
+			alert("mark 1");
+			var snd = new Audio("assets/www/audio/dontstopmenow.wav"); // buffers automatically when created
+			alert(snd.getAttribute('src'));
 			snd.play();
+		} else {
+		var snd2 = new Audio("audio/dontstopmenow.wav"); // buffers automatically when created
+		snd2.play();
+		
 		}
 	
 	});
@@ -252,7 +258,7 @@ function createPerson() {
 	$("#name").val("");
 	if (person == '' | !person.match(/^[a-zA-Z\-]+$/)) {
 		alert("invalid name");
-		alert();
+		
 		return;
 	}
 	
@@ -344,7 +350,7 @@ function collision($div1, $div2) {
 
 function goBack() {
 	if ($("#start").css('display') != 'none') {//on main page {
-		alert();
+		
 		navigator.app.exitApp();
 
 	
@@ -380,9 +386,9 @@ else if($('#' + game).css('display') != 'none') {
 }
 	
 }
-window.addEventListener('deviceready', function() {
-alert();
-	window.addEventListener("backbutton", goBack, false);
+document.addEventListener('deviceready', function() {
+
+	document.addEventListener("backbutton", goBack, false);
 
 	}, false);
 
